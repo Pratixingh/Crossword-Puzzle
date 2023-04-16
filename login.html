@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Form</title>
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <h2>Login</h2>
+        <form action="#">
+          <div class="input_box">
+            <input type="text" id="email" class="name" required />
+            <label>Email</label>
+          </div>
+
+          <div class="input_box">
+            <input type="text" id="password" class="password" required />
+            <label>Password</label>
+            <div class="password_checkbox">
+              <input type="checkbox" />
+              <p>Show Password</p>
+            </div>
+          </div>
+
+          <button class="login_button" id="login" type="submit">Login</button>
+          <div class="signup_link">
+            <a href="index.html">Don't have an Account ?</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
+    import {
+      getDatabase,
+      set,
+      ref,
+      update,
+    } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-database.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+    } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-S9XLHd6IqX6WFOjMqvCwuqwSCDWgSEg",
+      authDomain: "authentication-app-88397.firebaseapp.com",
+      databaseURL:
+        "https://authentication-app-88397-default-rtdb.firebaseio.com",
+      projectId: "authentication-app-88397",
+      storageBucket: "authentication-app-88397.appspot.com",
+      messagingSenderId: "1085190596939",
+      appId: "1:1085190596939:web:ae36f6dd6f08cb571460ce",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth();
+    login.addEventListener("click", (e) => {
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  alert('Enter agin');
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      const dt = new Date();
+      update(ref(database, "users/" + user.uid), {
+        last_login: dt,
+      });
+      
+      // Check if the user is authenticated and has admin privileges
+      user.getIdTokenResult().then((idTokenResult) => {
+        if (email =="admin@gmail.com") {
+          // Redirect to the admin view
+          window.location.assign("admin.html");
+        } else {
+          // Redirect to the regular user view
+          window.location.assign("index1.html");
+        }
+      });
+
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      alert(errorMessage);
+    });
+});
+
+  </script>
+</html>
